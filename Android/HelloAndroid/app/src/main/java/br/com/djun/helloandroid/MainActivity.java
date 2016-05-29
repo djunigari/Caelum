@@ -1,6 +1,7 @@
 package br.com.djun.helloandroid;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -23,8 +24,10 @@ public class MainActivity extends Activity{
         saudacao = getResources().getString(R.string.saudacao);
     }
 
-
     public void surpreenderUsuario(View view){
-        saudacaoTextView.setText(saudacao.concat(" ").concat(nomeEditText.getText().toString()));
+        Intent intent = new Intent(SaudacaoActivity.ACAO_EXIBIR_SAUDACAO);
+        intent.addCategory(SaudacaoActivity.CATEGORIA_SAUDACAO);
+        intent.putExtra(SaudacaoActivity.EXTRA_NOME_USUARIO, nomeEditText.getText().toString());
+        startActivity(intent);
     }
 }
