@@ -27,6 +27,15 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"/>
         </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/categoria"/>
+        <Spinner
+            android:id="@+id/categoriaSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/categoria" />
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
