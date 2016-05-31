@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".ViagemActivity" />
         <activity android:name=".GastoActivity" />
+        <activity android:name=".ViagemListActivity" />
+        <activity android:name=".GastoListActivity" />
     </application>
 
 </manifest>

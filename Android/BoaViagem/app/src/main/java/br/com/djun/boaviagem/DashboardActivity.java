@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DashboardActivity extends Activity {
     @Override
@@ -22,6 +21,10 @@ public class DashboardActivity extends Activity {
                 break;
             case R.id.novo_gasto:
                 startActivity(new Intent(this,GastoActivity.class));
+                break;
+            case R.id.minhas_viagens:
+                startActivity(new Intent(this,ViagemListActivity.class));
+                break;
         }
     }
 }
