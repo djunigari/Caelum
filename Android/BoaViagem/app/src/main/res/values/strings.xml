@@ -24,6 +24,9 @@
     <string name="local">Local</string>
     <string name="registrar_gasto">Registrar Gasto</string>
     <string name="categoria">Categoria</string>
+    <string name="sair">Sair</string>
+    <string name="remover_viagem">Remover viagem</string>
+    <string name="remover_gasto">Remover Gasto</string>
     <string-array name="categoria_gasto">
         <item>Alimentação</item>
         <item>Combustível</item>

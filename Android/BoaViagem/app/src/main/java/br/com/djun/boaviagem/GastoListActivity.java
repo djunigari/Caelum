@@ -2,8 +2,11 @@ package br.com.djun.boaviagem;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +18,7 @@ import java.util.Map;
 
 public class GastoListActivity extends ListActivity implements AdapterView.OnItemClickListener {
     private	List<Map<String,Object>> gastos = new ArrayList<>();
-
+    private String dataAnterior = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +30,30 @@ public class GastoListActivity extends ListActivity implements AdapterView.OnIte
         SimpleAdapter adapter = new SimpleAdapter(this, listarGastos(), R.layout.lista_gasto, de, para);
         adapter.setViewBinder(new GastoViewBinder());
         setListAdapter(adapter);
+        registerForContextMenu(getListView());
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Map<String, Object> map = gastos.get(position);
-        String descricao = (String)map.get("descricao");
-        Toast.makeText(this,"Gasto selecionado: "+descricao,Toast.LENGTH_SHORT).show();
+        openContextMenu(view);//Sem esse metodo o default é onPress
+    }
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.gasto_menu,menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.remover){
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            gastos.remove(info.position);
+            getListView().invalidateViews();
+            dataAnterior = "";
+            return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     private List<Map<String,Object>> listarGastos() {
@@ -65,7 +85,6 @@ public class GastoListActivity extends ListActivity implements AdapterView.OnIte
     }
 
     private class GastoViewBinder implements SimpleAdapter.ViewBinder{
-        private String dataAnterior = "";
         @Override
         public boolean setViewValue(View view, Object data, String textRepresentation) {
             if(view.getId() == R.id.dataTextView){
