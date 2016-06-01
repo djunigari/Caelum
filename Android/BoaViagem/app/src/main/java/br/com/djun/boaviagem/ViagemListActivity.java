@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ViagemListActivity extends ListActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener {
+public class ViagemListActivity extends ListActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener,SimpleAdapter.ViewBinder {
     private	List<Map<String,Object>> viagens = new ArrayList<>();
     private int posicaoViagem;
     private AlertDialog alertDialog;
@@ -25,12 +26,15 @@ public class ViagemListActivity extends ListActivity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         getListView().setOnItemClickListener(this);
 
-        String[] de = {"imagem","destino","data","total"};
+        String[] de = {"imagem","destino","data","total","barraProgresso"};
         int[] para = {R.id.tipoViagemImageView,
                 R.id.destinoTextView,
                 R.id.dataTextView,
-                R.id.valorTextView};
-        setListAdapter(new SimpleAdapter(this, listarViagens(),R.layout.lista_viagem, de, para));
+                R.id.valorTextView,
+                R.id.barraProgresso};
+        SimpleAdapter adapter = new SimpleAdapter(this, listarViagens(), R.layout.lista_viagem, de, para);
+        setListAdapter(adapter);
+        adapter.setViewBinder(this);
         alertDialog = createAlertDialog();
         dialogConfirmacao = createAlertDialogConfirmacao();
     }
@@ -47,12 +51,14 @@ public class ViagemListActivity extends ListActivity implements AdapterView.OnIt
         item.put("destino","São Paulo");
         item.put("data","02/02/2012	a 04/02/2012");
         item.put("total","Gasto total R$:314,98");
+        item.put("barraProgresso", new Double[]{500.0,450.0,314.98});
         viagens.add(item);
         item = new HashMap<String,	Object>();
         item.put("imagem", R.drawable.lazer);
         item.put("destino", "Maceió");
         item.put("data","14/05/2012	a 22/05/2012");
         item.put("total","Gasto	total R$:25834,67");
+        item.put("barraProgresso", new Double[]{500.0,450.0,124.50});
         viagens.add(item);
         return viagens;
     }
@@ -103,5 +109,18 @@ public class ViagemListActivity extends ListActivity implements AdapterView.OnIt
                 break;
 
         }
+    }
+
+    @Override
+    public boolean setViewValue(View view, Object data, String textRepresentation) {
+        if(view.getId() == R.id.barraProgresso){
+            ProgressBar progressBar = (ProgressBar) view;
+            Double valores[]  = (Double[]) data;
+            progressBar.setMax(valores[0].intValue());
+            progressBar.setSecondaryProgress(valores[1].intValue());
+            progressBar.setProgress(valores[2].intValue());
+            return true;
+        }
+        return false;
     }
 }
