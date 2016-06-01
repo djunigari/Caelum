@@ -34,6 +34,13 @@
     <string name="gastos_realizados">Listar gastos</string>
     <string name="remover">Remover</string>
     <string name="opcoes">Opções</string>
+    <string name="preferencias">Preferências</string>
+    <string name="modo_viagem_sumario">Modo viagem sumário</string>
+    <string name="modo_viagem">Modo Viagem</string>
+    <string name="informe_valor_limite">Informe o valor limite</string>
+    <string name="valor_limite_sumario">Valor limite sumário</string>
+    <string name="valor_limite">Valor limite</string>
+    <string name="manter_conectado">Manter Connectado</string>
     <string-array name="categoria_gasto">
         <item>Alimentação</item>
         <item>Combustível</item>
