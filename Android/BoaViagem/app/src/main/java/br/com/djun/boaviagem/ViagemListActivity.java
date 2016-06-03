@@ -128,9 +128,12 @@ public class ViagemListActivity extends ListActivity implements AdapterView.OnIt
 
     @Override
     public void onClick(DialogInterface dialog, int item) {
+        String id = (String) viagens.get(posicaoViagem).get("id");
         switch (item){
             case 0:
-                startActivity(new Intent(this,ViagemActivity.class));
+                Intent intent = new Intent(this, ViagemActivity.class);
+                intent.putExtra(Constantes.VIAGEM_ID,id);
+                startActivity(intent);
                 break;
             case 1:
                 startActivity(new Intent(this,GastoActivity.class));
