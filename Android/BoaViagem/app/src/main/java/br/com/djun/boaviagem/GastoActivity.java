@@ -11,10 +11,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
+import br.com.djun.boaviagem.domain.Gasto;
+import br.com.djun.boaviagem.repositories.GastoRepository;
+
 public class GastoActivity extends Activity {
+    private GastoRepository repository;
+
     int ano,mes,dia;
     private Button dataGastoButton;
     private Spinner categoriaSpinner;
@@ -32,8 +40,21 @@ public class GastoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gasto);
+
+        repository = new GastoRepository(this);
+
         dataGastoButton = (Button) findViewById(R.id.dataGastoButton);
         categoriaSpinner = (Spinner) findViewById(R.id.categoriaSpinner);
+        TextView destinoTextView = (TextView) findViewById(R.id.destinoTextView);
+
+        String destino = getIntent().getStringExtra(Constantes.VIAGEM_DESTINO);
+        long viagemId = getIntent().getLongExtra(Constantes.VIAGEM_ID, -1);
+        if(destino != null){
+            destinoTextView.setText(destino);
+        }else{
+            destinoTextView.setVisibility(View.GONE);
+        }
+
 
         Calendar calendar = Calendar.getInstance();
         ano = calendar.get(Calendar.YEAR);
@@ -66,6 +87,16 @@ public class GastoActivity extends Activity {
             return new DatePickerDialog(this,listener, ano,mes,dia);
         }
         return null;
+    }
+
+    public void registrarGasto(View view){
+        Gasto gasto = new Gasto();
+        gi
+        long result = repository.save(gasto);
+
+        if(result == -1){
+
+        }
     }
 
 }

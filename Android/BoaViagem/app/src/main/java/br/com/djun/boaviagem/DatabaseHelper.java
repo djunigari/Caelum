@@ -12,6 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, BANCO_DADOS, null, VERSAO);
     }
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE VIAGEM(" +

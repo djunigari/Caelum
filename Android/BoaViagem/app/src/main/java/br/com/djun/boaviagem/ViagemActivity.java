@@ -17,22 +17,29 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import br.com.djun.boaviagem.domain.Viagem;
+import br.com.djun.boaviagem.repositories.ViagemRepository;
+
 public class ViagemActivity extends Activity{
-    private DatabaseHelper helper;
+    private ViagemRepository repository;
+    SimpleDateFormat dateFormat;
     private EditText destinoEditText,orcamentoEditText,quantidadePessoasEditText;
     private RadioGroup tipoViagemRadioGroup;
     private DatePickerDialogButton dataChegadaDialog,dataSaidaDialog;
     private Button dataChegadaButton,dataSaidaButton;
-    private String viagemId;
+    private Long viagemId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viagem);
-        settingReferencesViews();
-        helper = new DatabaseHelper(this);
+        repository = new ViagemRepository(this);
+        dateFormat	=  new	SimpleDateFormat("dd/MM/yyyy");
 
-        viagemId = getIntent().getStringExtra(Constantes.VIAGEM_ID);
-        if(viagemId != null){
+        settingReferencesViews();
+
+        viagemId = getIntent().getLongExtra(Constantes.VIAGEM_ID,-1);
+        if(viagemId > -1){
             preparaEdicao();
         }
     }
@@ -48,27 +55,18 @@ public class ViagemActivity extends Activity{
     }
 
     private void preparaEdicao() {
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery(
-                "SELECT	tipo_viagem,destino,data_chegada," +
-                "data_saida,quantidade_pessoas,orcamento" +
-                " FROM viagem WHERE _id = ?" , new String[]{viagemId});
-        cursor.moveToFirst();
-        SimpleDateFormat dateFormat	=
-                new	SimpleDateFormat("dd/MM/yyyy");
-        if(cursor.getInt(0)	==	Constantes.VIAGEM_LAZER){
+        Viagem v = repository.findById(viagemId);
+
+        if(v.getTipoViagem() == Constantes.VIAGEM_LAZER){
             tipoViagemRadioGroup.check(R.id.lazerRadioButton);
         }	else	{
             tipoViagemRadioGroup.check(R.id.negocios);
         }
-        destinoEditText.setText(cursor.getString(1));
-        Date dataChegada	=	new	Date(cursor.getLong(2));
-        Date dataSaida	=	new Date(cursor.getLong(3));
-        dataChegadaButton.setText(dateFormat.format(dataChegada));
-        dataSaidaButton.setText(dateFormat.format(dataSaida));
-        quantidadePessoasEditText.setText(cursor.getString(4));
-        orcamentoEditText.setText(cursor.getString(5));
-        cursor.close();
+        destinoEditText.setText(v.getDestino());
+        dataChegadaButton.setText(dateFormat.format(v.getDataChegada()));
+        dataSaidaButton.setText(dateFormat.format(v.getDataSaida()));
+        quantidadePessoasEditText.setText(v.getQuantidadePessoas().toString());
+        orcamentoEditText.setText(v.getOrcamento().toString());
     }
 
     @Override
@@ -91,27 +89,25 @@ public class ViagemActivity extends Activity{
         return true;
     }
 
-
-
     public void salvarViagem(View view){
-        SQLiteDatabase db = helper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("destino",destinoEditText.getText().toString());
-        values.put("data_chegada",dataChegadaDialog.getDate().getTime());
-        values.put("data_saida",dataSaidaDialog.getDate().getTime());
-        values.put("orcamento",orcamentoEditText.getText().toString());
-        values.put("quantidade_pessoas",quantidadePessoasEditText.getText().toString());
+        Viagem viagem = new Viagem();
+        viagem.setDestino(destinoEditText.getText().toString());
+        viagem.setDataChegada(dataChegadaDialog.getDate());
+        viagem.setDataSaida(dataSaidaDialog.getDate());
+        viagem.setOrcamento(Double.valueOf(orcamentoEditText.getText().toString()));
+        viagem.setQuantidadePessoas(Integer.valueOf(quantidadePessoasEditText.getText().toString()));
         int	tipo = tipoViagemRadioGroup.getCheckedRadioButtonId();
         if(tipo	== R.id.lazerRadioButton)	{
-            values.put("tipo_viagem", Constantes.VIAGEM_LAZER);
+            viagem.setTipoViagem(Constantes.VIAGEM_LAZER);
         } else {
-            values.put("tipo_viagem", Constantes.VIAGEM_NEGOCIOS);
+            viagem.setTipoViagem(Constantes.VIAGEM_NEGOCIOS);
         }
         long result = -1;
-        if(viagemId == null){
-            result = db.insert("viagem", null, values);
+        if(viagemId < 0){
+            result = repository.save(viagem);
         }else{
-            result = db.update("viagem",values,"_id =?",new String[]{viagemId});
+            viagem.setId(viagemId);
+            result = repository.update(viagem);
         }
 
         if(result != -1){
@@ -133,7 +129,7 @@ public class ViagemActivity extends Activity{
    }
     @Override
     protected void onDestroy() {
-        helper.close();
+        repository.close();
         super.onDestroy();
     }
 

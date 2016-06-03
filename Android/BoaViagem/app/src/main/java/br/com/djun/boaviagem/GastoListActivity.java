@@ -16,18 +16,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.djun.boaviagem.domain.Gasto;
+import br.com.djun.boaviagem.repositories.GastoRepository;
+
 public class GastoListActivity extends ListActivity implements AdapterView.OnItemClickListener {
-    private	List<Map<String,Object>> gastos = new ArrayList<>();
+    private	List<Map<String,Object>> gastos;
+    private GastoRepository gastoRepository;
     private String dataAnterior = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getListView().setOnItemClickListener(this);
+        gastoRepository = new GastoRepository(this);
+        Long viagemId = getIntent().getLongExtra(Constantes.VIAGEM_ID,-1);
 
         String[] de	= {"data","descricao","valor","categoria"};
         int[] para = {R.id.dataTextView,R.id.descricaoTextView,R.id.valorTextView,R.id.categoriaLinearLayout};
-
-        SimpleAdapter adapter = new SimpleAdapter(this, listarGastos(), R.layout.lista_gasto, de, para);
+        SimpleAdapter adapter = new SimpleAdapter(this, listarGastos(viagemId), R.layout.lista_gasto, de, para);
         adapter.setViewBinder(new GastoViewBinder());
         setListAdapter(adapter);
         registerForContextMenu(getListView());
@@ -56,31 +61,24 @@ public class GastoListActivity extends ListActivity implements AdapterView.OnIte
         return super.onContextItemSelected(item);
     }
 
-    private List<Map<String,Object>> listarGastos() {
-        Map<String,	Object>	item = new HashMap<>();
-        item.put("data","04/02/2012");
-        item.put("descricao","Diária Hotel");
-        item.put("valor","R$:260,00");
-        item.put("categoria",R.color.categoria_hospedagem);
-        gastos.add(item);
-        item = new HashMap<>();
-        item.put("data","04/02/2012");
-        item.put("descricao","Almoço");
-        item.put("valor","R$:30,00");
-        item.put("categoria",R.color.categoria_alimentacao);
-        gastos.add(item);
-        item = new HashMap<>();
-        item.put("data","05/02/2012");
-        item.put("descricao","Diária Hotel");
-        item.put("valor","R$:260,00");
-        item.put("categoria",R.color.categoria_hospedagem);
-        gastos.add(item);
-        item = new HashMap<>();
-        item.put("data","04/02/2012");
-        item.put("descricao","Janta");
-        item.put("valor","R$:30,00");
-        item.put("categoria",R.color.categoria_alimentacao);
-        gastos.add(item);
+    private List<Map<String,Object>> listarGastos(Long id) {
+        gastos = new ArrayList<>();
+        List<Gasto> list;
+        if(id > -1){
+            list = gastoRepository.getGastosByViagemId(id);
+        }else{
+            list = gastoRepository.getGastos();
+        }
+
+        Map<String,	Object>	item;
+        for(Gasto g : list){
+            item = new HashMap<>();
+            item.put("data","04/02/2012");
+            item.put("descricao","Diária Hotel");
+            item.put("valor","R$:260,00");
+            item.put("categoria",R.color.categoria_hospedagem);
+            gastos.add(item);
+        }
         return gastos;
     }
 
