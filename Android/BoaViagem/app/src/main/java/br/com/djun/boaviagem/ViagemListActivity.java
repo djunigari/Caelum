@@ -146,6 +146,7 @@ public class ViagemListActivity extends ListActivity implements AdapterView.OnIt
                 break;
             case AlertDialog.BUTTON_POSITIVE:
                 viagens.remove(posicaoViagem);
+                removerViagem(id);
                 getListView().invalidateViews();
                 break;
             case AlertDialog.BUTTON_NEGATIVE:
@@ -153,6 +154,13 @@ public class ViagemListActivity extends ListActivity implements AdapterView.OnIt
                 break;
 
         }
+    }
+
+    private void removerViagem(String id) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String[] where = {id};
+        db.delete("gasto","viagem_id=?",where);
+        db.delete("viagem","_id=?",where);
     }
 
     @Override

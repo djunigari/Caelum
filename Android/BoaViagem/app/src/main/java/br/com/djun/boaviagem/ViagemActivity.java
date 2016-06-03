@@ -31,7 +31,7 @@ public class ViagemActivity extends Activity{
         settingReferencesViews();
         helper = new DatabaseHelper(this);
 
-        viagemId = (String) getIntent().getExtras().get(Constantes.VIAGEM_ID);
+        viagemId = getIntent().getStringExtra(Constantes.VIAGEM_ID);
         if(viagemId != null){
             preparaEdicao();
         }
