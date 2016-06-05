@@ -21,7 +21,15 @@
         <activity android:name=".activities.ConfiguracoesActivity" />
         <provider
             android:name=".provider.BoaViagemProvider"
-            android:authorities="br.com.djun.boaviagem.provider" />
+            android:authorities="br.com.djun.boaviagem.provider"
+            android:permission="br.com.djun.boaviagem.provider.ALL">
+            <!--android:readPermission="br.com.casadocodigo.boaviagem.provider.permission.READ"-->
+            <!--android:writePermission="br.com.casadocodigo.boaviagem.provider.permission.WRITE"-->
+            <!--<path-permission-->
+                <!--android:path="viagem"-->
+                <!--android:permission=-->
+                    <!--"br.com.casadocodigo.boaviagem.provider.permission.ALL"	/>-->
+        </provider>
     </application>
 
 </manifest>
