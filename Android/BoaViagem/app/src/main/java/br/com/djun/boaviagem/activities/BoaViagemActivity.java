@@ -1,4 +1,4 @@
-package br.com.djun.boaviagem;
+package br.com.djun.boaviagem.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import br.com.djun.boaviagem.R;
 
 public class BoaViagemActivity extends Activity {
     private static final String MANTER_CONECTADO = "manter_conectado";

@@ -1,10 +1,7 @@
-package br.com.djun.boaviagem;
+package br.com.djun.boaviagem.activities;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,27 +12,33 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
+import br.com.djun.boaviagem.Constantes;
+import br.com.djun.boaviagem.DatePickerDialogButton;
+import br.com.djun.boaviagem.R;
 import br.com.djun.boaviagem.domain.Viagem;
 import br.com.djun.boaviagem.repositories.ViagemRepository;
 
 public class ViagemActivity extends Activity{
     private ViagemRepository repository;
-    SimpleDateFormat dateFormat;
+    private SimpleDateFormat dateFormat;
+
+    private Long viagemId;
+
     private EditText destinoEditText,orcamentoEditText,quantidadePessoasEditText;
     private RadioGroup tipoViagemRadioGroup;
     private DatePickerDialogButton dataChegadaDialog,dataSaidaDialog;
     private Button dataChegadaButton,dataSaidaButton;
-    private Long viagemId;
+
+    public ViagemActivity(){
+        repository = new ViagemRepository(this);
+        dateFormat	=  new	SimpleDateFormat("dd/MM/yyyy");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viagem);
-        repository = new ViagemRepository(this);
-        dateFormat	=  new	SimpleDateFormat("dd/MM/yyyy");
-
         settingReferencesViews();
 
         viagemId = getIntent().getLongExtra(Constantes.VIAGEM_ID,-1);

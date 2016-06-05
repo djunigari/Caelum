@@ -1,4 +1,4 @@
-package br.com.djun.boaviagem;
+package br.com.djun.boaviagem.repositories;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,4 +1,4 @@
-package br.com.djun.boaviagem;
+package br.com.djun.boaviagem.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import br.com.djun.boaviagem.R;
 
 public class DashboardActivity extends Activity {
     @Override

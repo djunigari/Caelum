@@ -1,7 +1,9 @@
-package br.com.djun.boaviagem;
+package br.com.djun.boaviagem.activities;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import br.com.djun.boaviagem.R;
 
 public class ConfiguracoesActivity extends PreferenceActivity {
     @Override

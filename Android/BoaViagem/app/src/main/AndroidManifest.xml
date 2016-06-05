@@ -7,18 +7,21 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar" >
-        <activity android:name=".BoaViagemActivity">
+        <activity android:name=".activities.BoaViagemActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DashboardActivity" />
-        <activity android:name=".ViagemActivity" />
-        <activity android:name=".GastoActivity" />
-        <activity android:name=".ViagemListActivity" />
-        <activity android:name=".GastoListActivity" />
-        <activity android:name=".ConfiguracoesActivity" />
+        <activity android:name=".activities.DashboardActivity" />
+        <activity android:name=".activities.ViagemActivity" />
+        <activity android:name=".activities.GastoActivity" />
+        <activity android:name=".activities.ViagemListActivity" />
+        <activity android:name=".activities.GastoListActivity" />
+        <activity android:name=".activities.ConfiguracoesActivity" />
+        <provider
+            android:name=".provider.BoaViagemProvider"
+            android:authorities="br.com.djun.boaviagem.provider" />
     </application>
 
 </manifest>

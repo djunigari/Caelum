@@ -1,4 +1,4 @@
-package br.com.djun.boaviagem;
+package br.com.djun.boaviagem.activities;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -18,23 +18,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.djun.boaviagem.Constantes;
+import br.com.djun.boaviagem.R;
 import br.com.djun.boaviagem.domain.Viagem;
 import br.com.djun.boaviagem.repositories.ViagemRepository;
 
 public class ViagemListActivity extends ListActivity implements AdapterView.OnItemClickListener,DialogInterface.OnClickListener,SimpleAdapter.ViewBinder {
+    private ViagemRepository viagemRepository;
+    private SimpleDateFormat dateFormat;
+
     private	List<Map<String,Object>> viagens;
     private int posicaoViagem;
+
     private AlertDialog alertDialog;
     private AlertDialog dialogConfirmacao;
     private Double valorLimite;
-    private ViagemRepository viagemRepository;
-    private SimpleDateFormat dateFormat;
+
+
+    public ViagemListActivity(){
+        viagemRepository = new ViagemRepository(this);
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viagemRepository = new ViagemRepository(this);
-        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         getListView().setOnItemClickListener(this);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -153,5 +161,11 @@ public class ViagemListActivity extends ListActivity implements AdapterView.OnIt
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        viagemRepository.close();
+        super.onDestroy();
     }
 }

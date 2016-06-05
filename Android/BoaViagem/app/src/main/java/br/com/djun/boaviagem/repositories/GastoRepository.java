@@ -37,6 +37,10 @@ public class GastoRepository extends BaseRepository{
         return getDb().update("gasto",values,"_id = ?",new String[]{g.getId().toString()});
     }
 
+    public int remover(Long id){
+        return getDb().delete("gasto", "_id = ?", new String[]{id.toString()});
+    }
+
     public Gasto findById(Long id){
         Cursor cursor = getDb().rawQuery("SELECT _id,categoria,data,valor,descricao,local,viagem_id FROM gasto WHERE _id = ?", new String[]{id.toString()});
         cursor.moveToFirst();
@@ -71,7 +75,7 @@ public class GastoRepository extends BaseRepository{
         gasto.setValor(c.getDouble(3));
         gasto.setDescricao(c.getString(4));
         gasto.setLocal(c.getString(5));
-        gasto.setViagemId(c.getInt(6));
+        gasto.setViagemId(c.getLong(6));
         return gasto;
     }
 
