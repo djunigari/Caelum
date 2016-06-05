@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,17 +19,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import br.com.djun.twittersearch.R;
+import br.com.djun.twittersearch.tasks.AutenticacaoTask;
 
 public class TwitterSearchActivity extends Activity{
+    private AutenticacaoTask autenticacaoTask;
     private EditText texto;
     private ListView lista;
-    private String accessToken;
+
+    public TwitterSearchActivity(){
+        autenticacaoTask = new AutenticacaoTask();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,38 +47,10 @@ public class TwitterSearchActivity extends Activity{
 
     public void buscar(View view){
         String filtro = texto.getText().toString();
-        if(accessToken == null){
+        if(autenticacaoTask.getAccessToken() == null){
             Toast.makeText(this,"Token não disponivel",Toast.LENGTH_SHORT);
         }else {
             new TwitterTask().execute(filtro);
-        }
-    }
-
-    private class AutenticacaoTask extends AsyncTask<Integer,Void,Void>{
-
-        @Override
-        protected Void doInBackground(Integer... params) {
-            try {
-                HashMap<String, String> data = new HashMap<>();
-                data.put("grant_type","client_credentials");
-
-                String json = HttpRequest.post("https://api.twitter.com/oauth2/token")
-                        .authorization("Basic " + gerarChave())
-                        .form(data).body();
-                JSONObject	token	=	new JSONObject(json);
-                accessToken	=	token.getString("access_token");
-            } catch (Exception e) {
-
-            }
-            return null;
-        }
-
-        private String gerarChave() throws UnsupportedEncodingException {
-            String key = "nuDwCVCuyVqJdIwwaqQxC5fUq";
-            String secret = "YRjuFNzuP8HaRlJ0JMZgOlPB5CTg78A1wsOYreyxAOLmA9cn19";
-            String token = key+":"+secret;
-            String base64 =	Base64.encodeToString(token.getBytes(),Base64.NO_WRAP);
-            return	base64;
         }
     }
 
@@ -102,7 +76,9 @@ public class TwitterSearchActivity extends Activity{
 
                 String urlTwitter = "https://api.twitter.com/1.1/search/tweets.json?q=";
                 String url = Uri.parse(urlTwitter + filtro).toString();
-                String conteudo = HttpRequest.get(url).authorization("Bearer " + accessToken).body();
+                String conteudo = HttpRequest.get(url)
+                        .authorization("Bearer " + autenticacaoTask.getAccessToken())
+                        .body();
 
                 JSONObject jsonObject = new JSONObject(conteudo);
                 JSONArray resultados = jsonObject.getJSONArray("statuses");
