@@ -14,8 +14,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.TweetActivity" />
+        <service android:name=".services.NotificacaoService"/>
+        <receiver android:name=".broadcast.StartupReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 </manifest>

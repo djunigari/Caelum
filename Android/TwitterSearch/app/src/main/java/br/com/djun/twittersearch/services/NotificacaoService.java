@@ -30,9 +30,6 @@ import br.com.djun.twittersearch.tasks.AutenticacaoTask;
 public class NotificacaoService extends Service {
     private AutenticacaoTask autenticacaoTask;
 
-    private NotificacaoService(){
-        autenticacaoTask = new AutenticacaoTask();
-    }
 
     @Nullable
     @Override
@@ -42,11 +39,12 @@ public class NotificacaoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        autenticacaoTask = new AutenticacaoTask();
         autenticacaoTask.execute();
         ScheduledThreadPoolExecutor pool = new ScheduledThreadPoolExecutor(1);
         long delayInicial = 0;
         long periodo = 10;
-        TimeUnit unit = TimeUnit.MINUTES;
+        TimeUnit unit = TimeUnit.SECONDS;
         pool.scheduleWithFixedDelay(new NotificacaoTask(),delayInicial,periodo,unit);
         return START_STICKY;
     }
@@ -54,10 +52,15 @@ public class NotificacaoService extends Service {
     public boolean isConnected() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getActiveNetworkInfo();
+        if(info == null){
+            return false;
+        }
+
         return info.isConnected();
     }
 
     private void criarNotificacao(String user, String msg, int id){
+        System.out.println("fffffffffffffffffffffffffffffffffffffffffffffff");
         int icone = R.drawable.ic_launcher;
         String aviso = getString(R.string.aviso);
         long data = System.currentTimeMillis();
@@ -86,6 +89,7 @@ public class NotificacaoService extends Service {
 
         NotificationManager	notificationManager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(id,	notification);
+        System.out.println("ggggggggggggggggggggggggggggggggggggggggggg");
     }
 
     private class NotificacaoTask implements Runnable{
@@ -98,12 +102,17 @@ public class NotificacaoService extends Service {
                 return;
             }
             try{
-                String conteudo = HttpRequest.get(baseUrl + refreshUrl)
+                String url = baseUrl + refreshUrl;
+                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaa    "+autenticacaoTask.getAccessToken());
+                System.out.println("bbbbbbbbbbbbbbb     "+url);
+                String conteudo = HttpRequest.get(url)
                         .authorization("Bearer " + autenticacaoTask.getAccessToken())
                         .body();
 
+                System.out.println("cccccccccccccccc"+conteudo);
+
                 JSONObject jsonObject = new JSONObject(conteudo);
-                refreshUrl = jsonObject.getString("refresh_url");
+                refreshUrl = jsonObject.getJSONObject("search_metadata").getString("refresh_url");
                 JSONArray resultados = jsonObject.getJSONArray("statuses");
 
                 for(int i = 0; i < resultados.length(); i++){
@@ -113,6 +122,7 @@ public class NotificacaoService extends Service {
                             .getString("screen_name");
                     criarNotificacao(usuario,	texto,	i);
                 }
+                System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
             }catch(JSONException e){
                 Log.e(getPackageName(), e.getMessage(), e);
             }

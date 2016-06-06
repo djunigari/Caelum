@@ -42,7 +42,7 @@ public class TwitterSearchActivity extends Activity{
         texto = (EditText) findViewById(R.id.texto);
         lista = (ListView) findViewById(R.id.lista);
 
-        new AutenticacaoTask().execute();
+        autenticacaoTask.execute();
     }
 
     public void buscar(View view){

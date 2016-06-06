@@ -21,6 +21,9 @@ public class AutenticacaoTask extends AsyncTask<Void,Void,Void>{
             String json = HttpRequest.post("https://api.twitter.com/oauth2/token")
                     .authorization("Basic " + gerarChave())
                     .form(data).body();
+
+
+            System.out.println("jsonaaaaaaaaaaaaaaaaaaaaaaaa    "+json);
             JSONObject token	=	new JSONObject(json);
             accessToken	=	token.getString("access_token");
         } catch (Exception e) {
