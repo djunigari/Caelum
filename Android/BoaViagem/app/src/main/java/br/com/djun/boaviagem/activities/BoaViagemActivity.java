@@ -1,5 +1,11 @@
 package br.com.djun.boaviagem.activities;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,38 +15,51 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
+
+import java.io.IOException;
+
+import br.com.djun.boaviagem.Constantes;
 import br.com.djun.boaviagem.R;
 
 public class BoaViagemActivity extends Activity {
-    private static final String MANTER_CONECTADO = "manter_conectado";
     private EditText usuarioEditText;
     private EditText senhaEditText;
     private CheckBox manterConectado;
+
+    private GoogleAccountManager accountManager;
+    private Account account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        accountManager = new GoogleAccountManager(this);
         usuarioEditText = (EditText)findViewById(R.id.usuarioEditText);
         senhaEditText = (EditText)findViewById(R.id.senhaEditText);
         manterConectado = (CheckBox) findViewById(R.id.manterConectado);
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        boolean conectado = preferences.getBoolean(MANTER_CONECTADO, false);
+        boolean conectado = preferences.getBoolean(Constantes.MANTER_CONECTADO, false);
         if(conectado){
-            startActivity(new Intent(this,DashboardActivity.class));
+            iniciarDashboard();
         }
 
+    }
+
+    private void iniciarDashboard(){
+        startActivity(new Intent(this,DashboardActivity.class));
     }
 
     public void entrarOnClick(View view){
         String usuario = usuarioEditText.getText().toString();
         String senha = senhaEditText.getText().toString();
 
-
+        autenticar(usuario,senha);
         if("leitor".equalsIgnoreCase(usuario) && "123".equals(senha)){
             SharedPreferences preferences = getPreferences(MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(MANTER_CONECTADO,manterConectado.isChecked());
+            editor.putBoolean(Constantes.MANTER_CONECTADO,manterConectado.isChecked());
             editor.commit();
             startActivity(new Intent(this,DashboardActivity.class));
         }else{
@@ -50,5 +69,42 @@ public class BoaViagemActivity extends Activity {
         }
 
 
+    }
+
+    private void autenticar(String user, String password) {
+        Account account = accountManager.getAccountByName(user);
+        if(account == null){
+            Toast.makeText(this,R.string.conta_inexistente,Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(AccountManager.KEY_ACCOUNT_NAME,user);
+        bundle.putString(AccountManager.KEY_PASSWORD,password);
+
+        accountManager.getAccountManager().confirmCredentials(account,bundle,this,new AutenticacaoCallback(),null);
+    }
+
+    private class AutenticacaoCallback implements AccountManagerCallback<Bundle>{
+
+        @Override
+        public void run(AccountManagerFuture<Bundle> future) {
+            try {
+                Bundle result = future.getResult();
+
+                if(result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)){
+                    iniciarDashboard();
+                }else{
+                    Toast.makeText(getBaseContext(),R.string.erro_autenticao,Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } catch (OperationCanceledException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (AuthenticatorException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
