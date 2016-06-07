@@ -56,19 +56,6 @@ public class BoaViagemActivity extends Activity {
         String senha = senhaEditText.getText().toString();
 
         autenticar(usuario,senha);
-        if("leitor".equalsIgnoreCase(usuario) && "123".equals(senha)){
-            SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(Constantes.MANTER_CONECTADO,manterConectado.isChecked());
-            editor.commit();
-            startActivity(new Intent(this,DashboardActivity.class));
-        }else{
-            String msg = getString(R.string.erro_autenticao);
-            Toast toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-
     }
 
     private void autenticar(String user, String password) {
