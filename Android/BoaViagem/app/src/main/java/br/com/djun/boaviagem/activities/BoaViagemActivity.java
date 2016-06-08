@@ -54,7 +54,12 @@ public class BoaViagemActivity extends Activity {
     public void entrarOnClick(View view){
         String usuario = usuarioEditText.getText().toString();
         String senha = senhaEditText.getText().toString();
-
+        if(!manterConectado.isChecked()) {
+            SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor edit = preferences.edit();
+            edit.putBoolean(Constantes.MANTER_CONECTADO, false);
+            edit.commit();
+        }
         autenticar(usuario,senha);
     }
 
@@ -80,6 +85,10 @@ public class BoaViagemActivity extends Activity {
                 Bundle result = future.getResult();
 
                 if(result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)){
+                    SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+                    SharedPreferences.Editor edit = preferences.edit();
+                    edit.putBoolean(Constantes.MANTER_CONECTADO, manterConectado.isChecked());
+                    edit.commit();
                     iniciarDashboard();
                 }else{
                     Toast.makeText(getBaseContext(),R.string.erro_autenticao,Toast.LENGTH_SHORT).show();
