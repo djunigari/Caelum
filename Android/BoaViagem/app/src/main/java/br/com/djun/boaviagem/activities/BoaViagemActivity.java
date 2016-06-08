@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -26,25 +27,24 @@ public class BoaViagemActivity extends Activity {
     private EditText usuarioEditText;
     private EditText senhaEditText;
     private CheckBox manterConectado;
+    private SharedPreferences preferences;
 
     private GoogleAccountManager accountManager;
     private Account account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        accountManager = new GoogleAccountManager(this);
+        preferences = getPreferences(MODE_PRIVATE);
+        boolean conectado = preferences.getBoolean(Constantes.MANTER_CONECTADO, false);
+        if(conectado){
+            solicitarAutorizaocao();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-
-        accountManager = new GoogleAccountManager(this);
         usuarioEditText = (EditText)findViewById(R.id.usuarioEditText);
         senhaEditText = (EditText)findViewById(R.id.senhaEditText);
         manterConectado = (CheckBox) findViewById(R.id.manterConectado);
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        boolean conectado = preferences.getBoolean(Constantes.MANTER_CONECTADO, false);
-        if(conectado){
-            iniciarDashboard();
-        }
-
     }
 
     private void iniciarDashboard(){
@@ -64,7 +64,7 @@ public class BoaViagemActivity extends Activity {
     }
 
     private void autenticar(String user, String password) {
-        Account account = accountManager.getAccountByName(user);
+        account = accountManager.getAccountByName(user);
         if(account == null){
             Toast.makeText(this,R.string.conta_inexistente,Toast.LENGTH_SHORT).show();
             return;
@@ -77,6 +77,23 @@ public class BoaViagemActivity extends Activity {
         accountManager.getAccountManager().confirmCredentials(account,bundle,this,new AutenticacaoCallback(),null);
     }
 
+    public void solicitarAutorizaocao(){
+        String token = preferences.getString(Constantes.TOKEN_ACESSO, null);
+        String nomeConta = preferences.getString(Constantes.NOME_CONTA, null);
+        if(token != null){
+            accountManager.invalidateAuthToken(token);
+        }
+        account = accountManager.getAccountByName(nomeConta);
+        accountManager.getAccountManager()
+                .getAuthToken(account,
+                        Constantes.AUTH_TOKEN_TYPE,
+                        null,
+                        this,
+                        new	AutorizacaoCallback(),
+                        null);
+
+    }
+
     private class AutenticacaoCallback implements AccountManagerCallback<Bundle>{
 
         @Override
@@ -85,11 +102,11 @@ public class BoaViagemActivity extends Activity {
                 Bundle result = future.getResult();
 
                 if(result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)){
-                    SharedPreferences preferences = getPreferences(MODE_PRIVATE);
                     SharedPreferences.Editor edit = preferences.edit();
                     edit.putBoolean(Constantes.MANTER_CONECTADO, manterConectado.isChecked());
                     edit.commit();
-                    iniciarDashboard();
+
+                    solicitarAutorizaocao();
                 }else{
                     Toast.makeText(getBaseContext(),R.string.erro_autenticao,Toast.LENGTH_SHORT).show();
                     return;
@@ -102,5 +119,34 @@ public class BoaViagemActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private class AutorizacaoCallback implements AccountManagerCallback<Bundle>{
+
+        @Override
+        public void run(AccountManagerFuture<Bundle> future) {
+            try {
+                Bundle bundle = future.getResult();
+                String nomeConta = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
+                String tokenAcesso = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+                gravarTokenAcesso(tokenAcesso,nomeConta);
+
+                iniciarDashboard();
+            } catch (OperationCanceledException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (AuthenticatorException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void gravarTokenAcesso(String tokenAcesso, String nomeConta) {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor edit = preferences.edit();
+        edit.putString(Constantes.NOME_CONTA,nomeConta);
+        edit.putString(Constantes.TOKEN_ACESSO, tokenAcesso);
+        edit.commit();
     }
 }
