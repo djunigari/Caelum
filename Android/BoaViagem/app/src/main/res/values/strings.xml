@@ -44,6 +44,7 @@
     <string name="registro_salvo">Registro Salvo</string>
     <string name="erro_salvar">Erro ao salvar</string>
     <string name="conta_inexistente">Conta não existe</string>
+    <string name="anotacoes">Anotações</string>
     <string-array name="categoria_gasto">
         <item>Alimentação</item>
         <item>Combustível</item>

@@ -46,6 +46,9 @@ public class DashboardActivity extends Activity {
             case R.id.configuracoes:
                 startActivity(new Intent(this,ConfiguracoesActivity.class));
                 break;
+            case R.id.anotacoes:
+                startActivity(new Intent(this,AnotacaoActivity.class));
+                break;
         }
     }
 }

@@ -19,6 +19,7 @@
         <activity android:name=".activities.ViagemListActivity" />
         <activity android:name=".activities.GastoListActivity" />
         <activity android:name=".activities.ConfiguracoesActivity" />
+        <activity android:name=".activities.AnotacaoActivity" />
         <provider
             android:name=".provider.BoaViagemProvider"
             android:authorities="br.com.djun.boaviagem.provider"

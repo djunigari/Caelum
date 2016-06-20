@@ -34,14 +34,14 @@ public class BoaViagemActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login);
         accountManager = new GoogleAccountManager(this);
         preferences = getPreferences(MODE_PRIVATE);
         boolean conectado = preferences.getBoolean(Constantes.MANTER_CONECTADO, false);
         if(conectado){
             solicitarAutorizaocao();
         }
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
         usuarioEditText = (EditText)findViewById(R.id.usuarioEditText);
         senhaEditText = (EditText)findViewById(R.id.senhaEditText);
         manterConectado = (CheckBox) findViewById(R.id.manterConectado);
@@ -104,6 +104,7 @@ public class BoaViagemActivity extends Activity {
                 if(result.getBoolean(AccountManager.KEY_BOOLEAN_RESULT)){
                     SharedPreferences.Editor edit = preferences.edit();
                     edit.putBoolean(Constantes.MANTER_CONECTADO, manterConectado.isChecked());
+                    edit.putString(Constantes.NOME_CONTA,usuarioEditText.getText().toString());
                     edit.commit();
 
                     solicitarAutorizaocao();
