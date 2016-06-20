@@ -45,6 +45,10 @@
     <string name="erro_salvar">Erro ao salvar</string>
     <string name="conta_inexistente">Conta não existe</string>
     <string name="anotacoes">Anotações</string>
+    <string name="nova_anotacao">Nova Anotação</string>
+    <string name="dia">Dia</string>
+    <string name="titulo">Titulo</string>
+    <string name="salvar">Salvar</string>
     <string-array name="categoria_gasto">
         <item>Alimentação</item>
         <item>Combustível</item>

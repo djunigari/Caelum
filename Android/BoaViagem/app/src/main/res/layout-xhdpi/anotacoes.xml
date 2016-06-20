@@ -9,24 +9,16 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
-    <FrameLayout
+    <fragment
         android:id="@+id/fragment_anotacoes"
+        android:name="br.com.djun.boaviagem.activities.AnotacaoListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FRAGMENT B"/>
-    </FrameLayout>
-    <FrameLayout
+        android:layout_weight="1"/>
+    <fragment
         android:id="@+id/fragment_anotacao"
-        android:layout_width="wrap_content"
+        android:name="br.com.djun.boaviagem.activities.AnotacaoFragment"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FRAGMENT C"/>
-    </FrameLayout>
+        android:layout_weight="1"/>
 </LinearLayout>
