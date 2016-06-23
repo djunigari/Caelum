@@ -11,13 +11,13 @@
         android:layout_weight="1"/>
     <fragment
         android:id="@+id/fragment_anotacoes"
-        android:name="br.com.djun.boaviagem.activities.AnotacaoListFragment"
+        android:name="br.com.djun.boaviagem.fragments.AnotacaoListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
     <fragment
         android:id="@+id/fragment_anotacao"
-        android:name="br.com.djun.boaviagem.activities.AnotacaoFragment"
+        android:name="br.com.djun.boaviagem.fragments.AnotacaoFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"/>

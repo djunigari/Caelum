@@ -1,6 +1,5 @@
-package br.com.djun.boaviagem.activities;
+package br.com.djun.boaviagem.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,11 +12,7 @@ import android.widget.EditText;
 import br.com.djun.boaviagem.R;
 import br.com.djun.boaviagem.domain.Anotacao;
 
-/**
- * Created by djunigari on 20/06/16.
- */
-public class AnotacaoFragment extends Fragment implements DialogInterface.OnClickListener {
-
+public class AnotacaoFragment extends Fragment implements View.OnClickListener {
     private EditText dia,titulo,descricao;
     private Button salvarButton;
     private Anotacao anotacao;
@@ -35,11 +30,32 @@ public class AnotacaoFragment extends Fragment implements DialogInterface.OnClic
         titulo = (EditText) getActivity().findViewById(R.id.titulo);
         descricao = (EditText) getActivity().findViewById(R.id.descricao);
         salvarButton = (Button) getActivity().findViewById(R.id.salvar);
+        salvarButton.setOnClickListener(this);
 
+        if(anotacao != null){
+            prepararEdicao(anotacao);
+        }
+    }
+
+    public void prepararEdicao(Anotacao anotacao) {
+        setAnotacao(anotacao);
+        dia.setText(anotacao.getDia().toString());
+        titulo.setText(anotacao.getTitulo());
+        descricao.setText(anotacao.getDescricao());
+    }
+
+    public void setAnotacao(Anotacao anotacao) {
+        this.anotacao = anotacao;
+    }
+
+    public void criarNovaAnotacao(){
+        anotacao = new Anotacao();
+        dia.setText("");
+        titulo.setText("");
+        descricao.setText("");
     }
 
     @Override
-    public void onClick(DialogInterface dialogInterface, int i) {
-
+    public void onClick(View v) {
     }
 }

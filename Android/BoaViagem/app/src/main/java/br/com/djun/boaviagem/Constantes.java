@@ -15,4 +15,5 @@ public class Constantes {
     public static final	String APP_NAME = "BoaViagem";
     public static final	String AUTH_TOKEN_TYPE = "oauth2:https://www.googleapis.com/auth/calendar";
     public static final	String API_KEY = "AIzaSyA6wsMz_s3uCNf4jmFH40Em_V2Z6QMXWgY";
+    public static final String VIAGEM_SELECIONADA = "viagem_selecionada";
 }
