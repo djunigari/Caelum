@@ -22,6 +22,9 @@ public class TabActivity extends ActionBarActivity{
         TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(fm);
         viewPager.setAdapter(tabPagerAdapter);
 
+        actionBar =	getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
         SimpleTabListener listener = new SimpleTabListener(viewPager);
         actionBar.addTab(actionBar.newTab()
                 .setText(R.string.top_sellers)
