@@ -23,8 +23,8 @@ public class DrawerActivity extends ActionBarActivity implements AdapterView.OnI
     private	CharSequence drawerTitle;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
         options = getResources().getStringArray(R.array.drawer_options);
@@ -66,13 +66,6 @@ public class DrawerActivity extends ActionBarActivity implements AdapterView.OnI
         title = options[i];
         setTitle(title);
         drawerLayout.closeDrawer(drawerList);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-        menu.findItem(R.id.action_search).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
