@@ -3,7 +3,7 @@ package br.com.djun.catalogo;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -28,7 +28,7 @@ public class GridActivity extends ActionBarActivity implements RecyclerView.OnIt
         setContentView(R.layout.activity_grid);
 
         grid = (RecyclerView)findViewById(R.id.grid);
-        RecyclerView.LayoutManager manager = new GridLayoutManager(this, 3);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
         grid.setLayoutManager(manager);
 
         GridAdapter adapter	= new GridAdapter(createBooks());
